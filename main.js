@@ -33,14 +33,14 @@ const FONT_METRICS = {
 
 class PageBreakPlugin extends Plugin {
     async onload() {
-        console.log('Loading Page Break Plugin - Stable Full Document Mode');
+    
         await this.loadSettings();
         
         this.breakContainers = new Map();
         this.calculatedBreaks = new Map(); // Cache breaks per container
         this.observers = new Map();
         
-        // Very aggressive debouncing - only recalc when really necessary
+        //only recalc when really necessary
         this.debouncedUpdate = debounce(() => this.updateAllViews(), 500, true);
 
         this.addRibbonIcon('separator-horizontal', 'Toggle Page Breaks', () => {
@@ -61,10 +61,10 @@ class PageBreakPlugin extends Plugin {
 
         this.addSettingTab(new PageBreakSettingTab(this.app, this));
 
-        // Register events - but minimize recalculations
+        // Register events 
         this.registerEvent(
             this.app.workspace.on('layout-change', () => {
-                console.log('Layout changed - recalculating');
+            
                 this.calculatedBreaks.clear();
                 this.debouncedUpdate();
             })
@@ -76,7 +76,7 @@ class PageBreakPlugin extends Plugin {
             })
         );
 
-        // On editor change, only extend container if needed - DON'T recalculate
+        // On editor change, only extend container if needed 
         this.registerEvent(
             this.app.workspace.on('editor-change', () => {
                 this.extendContainersIfNeeded();
@@ -100,13 +100,13 @@ class PageBreakPlugin extends Plugin {
 
         // Initial update
         setTimeout(() => {
-            console.log('=== INITIAL CALCULATION ===');
+        
             this.updateAllViews();
         }, 500);
     }
 
     onunload() {
-        console.log('Unloading Page Break Plugin');
+
         this.removeAllPageBreaks();
         this.observers.forEach(observer => observer.disconnect());
         this.observers.clear();
@@ -129,13 +129,13 @@ class PageBreakPlugin extends Plugin {
     }
 
     recalibrate() {
-        console.log('=== MANUAL RECALIBRATION ===');
+        
         this.calculatedBreaks.clear();
         this.removeAllPageBreaks();
         setTimeout(() => this.updateAllViews(), 100);
     }
 
-    // NEW: Only extend containers, don't recalculate breaks
+    // Only extend containers, don't recalculate breaks
     extendContainersIfNeeded() {
         this.breakContainers.forEach((container, targetEl) => {
             const currentHeight = parseInt(container.style.height) || 0;
@@ -143,7 +143,7 @@ class PageBreakPlugin extends Plugin {
             
             // Only extend if document grew significantly
             if (newHeight > currentHeight + 100) {
-                console.log(`Extending container from ${currentHeight}px to ${newHeight}px - NOT recalculating breaks`);
+                
                 container.style.height = `${newHeight}px`;
                 
                 // Add more breaks if needed
@@ -160,7 +160,7 @@ class PageBreakPlugin extends Plugin {
                 );
                 
                 if (newBreaks.length > 0) {
-                    console.log(`Adding ${newBreaks.length} new breaks`);
+                  
                     this.renderAdditionalBreaks(container, newBreaks, existingBreaks.length + 2);
                     this.calculatedBreaks.set(targetEl, [...existingBreaks, ...newBreaks]);
                 }
@@ -197,29 +197,28 @@ class PageBreakPlugin extends Plugin {
     }
 
     updateAllViews() {
-        console.log('=== UPDATE ALL VIEWS ===');
         
-        // Method 1: Standard leaves
+        // Standard leaves
         const leaves = this.app.workspace.getLeavesOfType('markdown');
-        console.log(`Found ${leaves.length} markdown leaves`);
+       
         
         leaves.forEach(leaf => {
             const view = leaf.view;
             if (view && view.contentEl) {
-                console.log('Processing leaf:', leaf);
+              
                 this.updatePageBreaks(view.contentEl);
             }
         });
         
-        // Method 2: Look for preview mode specifically
+        //Look for preview mode specifically
         setTimeout(() => {
             // Check for preview mode in a different way
             const previewViews = document.querySelectorAll('.markdown-reading-view, .markdown-preview-view');
-            console.log(`Found ${previewViews.length} preview views`);
+            
             
             previewViews.forEach(view => {
                 if (view && !view.querySelector('.page-break-container')) {
-                    console.log('Setting up breaks on preview view');
+                   
                     this.updatePageBreaks(view);
                 }
             });
@@ -250,17 +249,17 @@ class PageBreakPlugin extends Plugin {
             }
 
             if (!targetEl) {
-                console.log('No target element found');
+                
                 return;
             }
 
             // Check if we already have breaks calculated for this container
             if (this.calculatedBreaks.has(targetEl)) {
-                console.log('Using cached breaks - NOT recalculating');
+             
                 return;
             }
 
-            console.log(`CALCULATING BREAKS FOR ${isEditMode ? 'EDIT' : 'PREVIEW'} MODE `);
+       
 
             // Remove old breaks
             const existingContainer = this.breakContainers.get(targetEl);
@@ -275,7 +274,7 @@ class PageBreakPlugin extends Plugin {
 
             // Calculate breaks - ONCE
             const breaks = this.calculateSimpleBreaks(targetEl);
-            console.log(`Calculated ${breaks.length} breaks at positions:`, breaks.map(b => Math.round(b)));
+           
 
             // Store breaks
             this.calculatedBreaks.set(targetEl, breaks);
@@ -315,8 +314,7 @@ class PageBreakPlugin extends Plugin {
         }
 
         targetEl.appendChild(container);
-        console.log(`Created container with height: ${height}px`);
-        
+
         return container;
     }
 
@@ -334,13 +332,13 @@ class PageBreakPlugin extends Plugin {
         this.observers.set(targetEl, resizeObserver);
     }
 
-    // SIMPLIFIED: Just create breaks at regular intervals
+    //Just create breaks at regular intervals
     calculateSimpleBreaks(container) {
         const breaks = [];
         const pageHeight = this.getPageHeight();
         const totalHeight = container.scrollHeight;
         
-        console.log(`Document height: ${totalHeight}px, Page height: ${pageHeight}px`);
+        
         
         let currentPage = 1;
         let lastBreakY = 0;
@@ -386,7 +384,7 @@ class PageBreakPlugin extends Plugin {
         });
 
         container.appendChild(fragment);
-        console.log(`Rendered ${breaks.length} indicators`);
+        
     }
 
     createBreakIndicator(position, pageNumber) {
