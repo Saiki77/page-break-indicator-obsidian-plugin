@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "minAppVersion": "0.15.0",
     "description": "Shows accurate page break indicators for PDF export preview with smart positioning and performance optimization",
-    "author": "Saiki",
-    "authorUrl": "",
-    "isDesktopOnly": false
+    "author": "Saiki77",
+    "authorUrl": "https://github.com/Saiki77",
+    "isDesktopOnly": true
 }
