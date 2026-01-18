@@ -1,0 +1,10 @@
+{
+    "id": "page-break-indicator",
+    "name": "Page Break Indicator",
+    "version": "1.0.0",
+    "minAppVersion": "0.15.0",
+    "description": "Shows accurate page break indicators for PDF export preview with smart positioning and performance optimization",
+    "author": "Saiki",
+    "authorUrl": "",
+    "isDesktopOnly": false
+}

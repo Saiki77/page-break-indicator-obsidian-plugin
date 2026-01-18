@@ -1,0 +1,90 @@
+/* Page Break Indicator Plugin - Simplified & Guaranteed Visible */
+
+/* Container for breaks */
+.page-break-container {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    z-index: 100 !important;
+    overflow: visible !important;
+}
+
+/* Individual break indicator */
+.page-break-indicator {
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+/* Break line */
+.page-break-line {
+    display: block !important;
+    visibility: none !important;
+    pointer-events: none !important;
+}
+
+/* Page number badge */
+.page-break-number {
+    display: block !important;
+    visibility: visible !important;
+    font-family: var(--font-interface);
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+/* Hidden state */
+.page-breaks-hidden .page-break-container {
+    display: none !important;
+}
+
+.page-breaks-hidden .page-break-indicator {
+    display: none !important;
+}
+
+/* Ensure relative positioning for containers */
+.markdown-preview-view,
+.cm-scroller {
+    position: relative;
+}
+
+/* Hide from print/export */
+@media print {
+    .page-break-container,
+    .page-break-indicator {
+        display: none !important;
+        visibility: hidden !important;
+    }
+}
+
+/* Smooth transitions */
+.page-break-indicator {
+    transition: opacity 0.2s ease;
+}
+
+.page-break-line {
+    transition: opacity 0.2s ease;
+}
+
+/* Hover effect */
+.page-break-indicator:hover .page-break-line {
+    opacity: 1 !important;
+}
+
+.page-break-indicator:hover .page-break-number {
+    opacity: 1 !important;
+    transform: translateX(-50%) scale(1.05);
+}
+
+/* Ensure proper rendering */
+.page-break-container,
+.page-break-indicator,
+.page-break-line,
+.page-break-number {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
