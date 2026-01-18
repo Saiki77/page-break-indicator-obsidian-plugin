@@ -197,18 +197,33 @@ class PageBreakPlugin extends Plugin {
     }
 
     updateAllViews() {
-        const leaves = this.app.workspace.getLeavesOfType('markdown');
-        console.log(`Updating ${leaves.length} markdown views`);
+        console.log('=== UPDATE ALL VIEWS ===');
         
-        // ALWAYS clear caches - less efficient but more reliable
-        this.calculatedBreaks.clear();
+        // Method 1: Standard leaves
+        const leaves = this.app.workspace.getLeavesOfType('markdown');
+        console.log(`Found ${leaves.length} markdown leaves`);
         
         leaves.forEach(leaf => {
             const view = leaf.view;
-            if (view.contentEl) {
+            if (view && view.contentEl) {
+                console.log('Processing leaf:', leaf);
                 this.updatePageBreaks(view.contentEl);
             }
         });
+        
+        // Method 2: Look for preview mode specifically
+        setTimeout(() => {
+            // Check for preview mode in a different way
+            const previewViews = document.querySelectorAll('.markdown-reading-view, .markdown-preview-view');
+            console.log(`Found ${previewViews.length} preview views`);
+            
+            previewViews.forEach(view => {
+                if (view && !view.querySelector('.page-break-container')) {
+                    console.log('Setting up breaks on preview view');
+                    this.updatePageBreaks(view);
+                }
+            });
+        }, 1000);
     }
 
     removeAllPageBreaks() {
